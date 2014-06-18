@@ -35,7 +35,10 @@ $(document).ready(function () {
 	$("#control").draggable();
 	$("#clear").mousedown(function () {
 		populate($("#height").val(), $("#width").val());
-		$("#pause").mousedown();
+		if (running) {
+		clearInterval(interval);
+			running = false;
+		}
 		liveCells = [];
 	});
 	$(document).mouseup(function () {
