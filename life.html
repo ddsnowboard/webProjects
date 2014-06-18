@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="jquery-2.1.1.min.js"></script>
+		<script src="life.js"></script>
+		<script src="master.js"></script>
+		<script src="jquery-ui-1.10.4.min.js"></script>
+		<link rel="stylesheet" href="style.css" type="text/css" />
+	</head>
+	<body>
+		<div id="life">
+			<div id="cells">
+				<table style="position:relative; background-color: #B8B8B8;">
+					<tbody>
+					
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="control">
+			Width: <input type="text" value="10" id="width" class="box" />
+			Height: <input type="text" id="height" value="10" class="box" />
+			<span id="complaint"></span>
+			<div class="button" id="clear"><p style="line-height: 2px;">Clear</p></div>
+			<!-- Make a play button and a pause button and wire them up with http://www.w3schools.com/jsref/met_win_setinterval.asp 
+			Also, get these buttons to look less terrible. -->
+			<div class="button" id="play"><img src="play.png" style="height: 20px;"></div>
+			<div class="button" id="pause"><img src="pause.png" style="top:4px;" /></div>
+			Speed (generations/sec): <input type="text" id="speed" value="10" />
+		</div>
+	</body>
+</html>

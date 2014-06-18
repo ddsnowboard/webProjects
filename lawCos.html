@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<title>Law of Cosines Calculator</title>
+		<script src="jquery-2.1.1.min.js"></script>
+		<script src="lawCos.js"></script>
+		<script src="master.js"></script>
+		<link rel="stylesheet" href="style.css" type="text/css" />
+        <script type="text/javascript" src="jquery.caret.js"></script> 
+		<style>
+		#pi {
+    visibility:hidden;
+    font-family: Palatino,serif;
+}
+input {
+    font-family: Palatino, serif;
+}
+	</style>
+	</head>
+	<body>
+        <h2 id="header">Law of Cosines Calculator</h2>  
+        <p id="instructions">Put in what you know, and the rest of the boxes will be filled in when you click "submit", assuming there is enough information.
+		Write radians in form '1/2π' or 'π/2'. For π, use 'p', the π button, or π on your keyboard, if you have it. 
+<br>
+</p>
+
+        <form>
+        <input type="radio" name="degrees" value="degrees"id="degrees" checked><label for="degrees">Degrees</label></input>
+        <input type="radio" id="radians" value="radians" name="degrees"><label for="radians">Radians</label></input>
+        </form>
+		<br>
+        <table>
+		<canvas id="triangle" width="500" height="500"></canvas>
+        <tr>
+            <td>A:</td>
+            <td><input type="text" class="box" id="A"></td>
+        </tr>
+        <tr>
+            <td>B:</td>
+            <td><input class="box" type="text" id="B"></td></tr>
+        <tr>
+            <td>C:</td>
+                <td><input class="box" type="text" id="C"></td>
+        </tr>
+        <tr>
+            <td>c:</td>
+            <td><input class="box" type="text" id="smallc"></td>
+            <td><div id="pi" class="button" style="width:30px">π</div></td>
+            </tr>
+        </table>
+        <br>
+    <table>
+    <tr>
+        <td>
+            <div class="button" id="submit">Submit</div>
+        </td>
+        <td>
+    <div id="clear" class="button">Clear</div>
+        </td>
+    </tr>
+    </table>
+	</body>
+</html>

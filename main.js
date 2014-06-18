@@ -1,0 +1,20 @@
+$(document).ready(function(){
+	$("#evernote").mousedown(function(){
+		$(".dropdown").slideToggle();
+		$("#term").focus();
+	});
+	$("#term").keydown(function(event)
+	{
+		if(event.which==13)
+		{
+			$(".button").mousedown();
+		}
+	});
+	$("#term").keyup(function(event)
+	{
+		if(event.which==13)
+		{
+			$(".button").mouseup();
+		}
+	});
+});

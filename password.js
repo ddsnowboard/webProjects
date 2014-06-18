@@ -1,0 +1,23 @@
+$(document).ready(function(){
+	$("#password").focus();
+	$(".button").mousedown(function(){
+        $(this).addClass("down");
+    });
+    $(".button").mouseup(function(){
+        $(this).removeClass('down');
+    });
+    $(".button").hover(function(){
+        $(this).addClass('hover');
+    },function(){
+        $(this).removeClass('hover');
+    });
+	$("#submit").click(function(){
+		window.location="https://dl.dropboxusercontent.com/u/13761659/"+$("#password").val()+".html";
+	});
+	$("#password").keydown(function(event){
+		if(event.which==13)
+		{
+			$("#submit").click();
+		}
+	});
+});
