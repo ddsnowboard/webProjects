@@ -120,6 +120,7 @@ function generation() {
 		}
 		// Set numberArray spot that corresponds to gridArray spot to the amount of neighbors.
 		numberArray[cells[p][0]][cells[p][1]] = neighbors;
+		debugArrayPrint(numberArray);
 	}
 		// Look at every cell and see if it should be alive or dead.
 		for (var i = 0; i < numberArray.length; i++) {
@@ -181,8 +182,6 @@ function generation() {
 				}
 			}
 		}
-		console.log(output[3][0] < 0);
-		debugArrayPrint(output);
 		return output;
 	}
 
