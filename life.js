@@ -180,7 +180,6 @@ function flipDead() {
 	// automatically without any substring stuff or anything. 
 	gridArray[parseInt($(this).parent().attr('id'),10)][parseInt($(this).attr('id'),10)]=1;
 	liveCells.push([$(this).parent().attr('id'),$(this).attr('id')]);
-	debugArrayPrint(liveCells);
 }
 // Same thing as flipDead() but the opposite. 
 function flipAlive() {
@@ -190,7 +189,6 @@ function flipAlive() {
 	if (liveCells.myIndexOf([$(this).parent().attr("id"), $(this).attr('id')])!==-1) {
 		liveCells.splice(liveCells.myIndexOf([$(this).parent().attr("id"), $(this).attr('id')]),1);
 	}
-	debugArrayPrint(liveCells);
 }
 // Runs when the mouse enters a dead cell. If the mouse is down, it flips it. Running mousedown() seems inefficient, but it was the easiest
 // way to keep the cell as the context. I used to have one for live cells, but I didn't like that very much, so I took it out. I could have it where 
