@@ -102,6 +102,7 @@ function generation() {
 		}
 	}
 	var cells = getNeighbors(liveCells);
+	// var cells = [[0,0],[0,1],[1,0],[1,1]];
 	for (var p = 0; p < cells.length; p++) {
 		neighbors = 0;
 		// Possible x's and possible y's. 3 * 3 = 9, minus i,j, the cell itself, gives you its 8 possible neighbors.
@@ -122,7 +123,7 @@ function generation() {
 			}
 		}
 		// Set numberArray spot that corresponds to gridArray spot to the amount of neighbors.
-		numberArray[cells[p][0]][cells[p][1]] = neighbors;
+		numberArray[cells[p][1]][cells[p][0]] = neighbors;
 		debugArrayPrint(numberArray);
 	}
 		// Look at every cell and see if it should be alive or dead.
