@@ -176,7 +176,7 @@ function drawTriangle(A, B, C, c) {
 	textY = Math.floor(yOffset-10);
 	context.fillText(origA, textX, textY);
 	textX = Math.floor(((xOffset+A+5+xOffset+5+(B*Math.cos(c)))/2)-20*Math.cos(Math.atan(-(((xOffset+A+5)-(xOffset+5+(B*Math.cos(c)))))/((yOffset)-(yOffset-(B*Math.sin(c)))))));
-	textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2-20*Math.sin(Math.atan(-(((xOffset+5)-((xOffset+5)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));
+	textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2-20*Math.sin(Math.atan(-(((xOffset+5)-((xOffset+5)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));xOffset+5
 	context.fillText(origC, textX, textY);
 	console.log(c);
 	console.log(c<0.523);
@@ -196,6 +196,11 @@ function drawTriangle(A, B, C, c) {
 	context.lineTo(xOffset+A+5,yOffset);
 	context.lineTo((xOffset+5)+B*Math.cos(c),yOffset-(B*Math.sin(c)));
 	context.stroke();
+	$("#triangle").drawArc({
+		fillStyle: "grey",
+		x: xOffset+5, y: yOffset,
+		radius: 15
+	});
 }
 $(document).ready(function () {
 	// Which radio button you've chosen. Defaults to degrees.
