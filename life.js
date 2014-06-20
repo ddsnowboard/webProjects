@@ -69,7 +69,9 @@ $(document).ready(function () {
 	$(".box").keyup(function () {
 		if ($("#height").val() < 40 && $("#width").val() < 50) {
 			$("#complaint").empty();
-			populate($("#height").val(), $("#width").val());
+			height = $("#height").val();
+			width = $("#width").val();
+			populate(height, width);
 		} else {
 			$("#complaint").html("That value is too big!");
 		}
