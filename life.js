@@ -14,7 +14,7 @@ I learned that the hard way. */
 // to make my own function that should do it. But that's for another day, this is making me a little frustrated.
 
 $(document).ready(function () {
-	//Default width and height, in cells.
+	//Width and height, in cells. Defaults to 10 and 10.
 	width = 10;
 	height = 10;
 	interval = null;
@@ -34,7 +34,7 @@ $(document).ready(function () {
 	});
 	$("#control").draggable();
 	$("#clear").mousedown(function () {
-		populate($("#height").val(), $("#width").val());
+		populate(height, width);
 		if (running) {
 		clearInterval(interval);
 			running = false;
@@ -97,14 +97,13 @@ function generation() {
 	//An array such that numberArray[y][x] is the number of live neighbors gridArray[y][x] has.
 	var numberArray = [];
 	var neighbors = 0;
-	for (var i = 0; i < gridArray.length; i++) {
+	for (var i = 0; i < height; i++) {
 		numberArray.push([]);
-		for (var j = 0; j < gridArray[i].length; j++) {
+		for (var j = 0; j < width; j++) {
 			numberArray[i][j] = 0;
 		}
 	}
 	var cells = getNeighbors(liveCells);
-	// var cells = [[0,0],[0,1],[1,0],[1,1]];
 	for (var p = 0; p < cells.length; p++) {
 		neighbors = 0;
 		// Possible x's and possible y's. 3 * 3 = 9, minus i,j, the cell itself, gives you its 8 possible neighbors.
@@ -126,7 +125,6 @@ function generation() {
 		}
 		// Set numberArray spot that corresponds to gridArray spot to the amount of neighbors.
 		numberArray[cells[p][1]][cells[p][0]] = neighbors;
-		debugArrayPrint(numberArray);
 	}
 		// Look at every cell and see if it should be alive or dead.
 		for (var i = 0; i < numberArray.length; i++) {
@@ -182,7 +180,7 @@ function generation() {
 		while (!done) {
 			done = true;
 			for (var i = 0; i < output.length; i++) {
-				if (output[i][0] >= width || output[i][0] < 0 || output[i][1] >= height || output[i][1] < 0) {
+				if (output[i][1] >= width || output[i][1] < 0 || output[i][0] >= height || output[i][0] < 0) {
 					output.splice(i, 1);
 					done = false;
 				}
@@ -221,7 +219,6 @@ function generation() {
 		// automatically without any substring stuff or anything.
 		gridArray[parseInt($(this).parent().attr('id'), 10)][parseInt($(this).attr('id'), 10)] = 1;
 		liveCells.push([parseInt($(this).parent().attr('id'), 10), parseInt($(this).attr('id'), 10)]);
-		getNeighbors(liveCells);
 	}
 	// Same thing as flipDead() but the opposite.
 	function flipAlive() {
@@ -231,6 +228,7 @@ function generation() {
 		if (liveCells.myIndexOf([parseInt($(this).parent().attr("id"), 10), parseInt($(this).attr('id'), 10)]) !== -1) {
 			liveCells.splice(liveCells.myIndexOf([parseInt($(this).parent().attr("id"), 10), parseInt($(this).attr('id'), 10)]), 1);
 		}
+		console.log(liveCells);
 	}
 	// Runs when the mouse enters a dead cell. If the mouse is down, it flips it. Running mousedown() seems inefficient, but it was the easiest
 	// way to keep the cell as the context. I used to have one for live cells, but I didn't like that very much, so I took it out. I could have it where
