@@ -8,11 +8,6 @@ I learned that the hard way. */
  * Could we make #control fixed to the side or something? Or maybe make it so we can drag it around? EDIT: Done!
  * What if we make an array that has the coords of live cells and only check them and their neighbors to make the program more efficient?*/
 
-// So, I'm trying to get flipDead() and flipAlive() add add and subtract the coords of living cells to liveCells, and it appears like it should work, but
-// it won't take them out because indexOf() isn't finding them. I don't know exactly what the deal is, although I have a hunch it is === vs == related.
-// I add the coords, like [3,3], and then I pass [3,3] to indexOf() and it should find it and give the index, but it never finds it. So I think I'm just going
-// to make my own function that should do it. But that's for another day, this is making me a little frustrated.
-
 $(document).ready(function () {
 	//Width and height, in cells. Defaults to 10 and 10.
 	width = 10;
@@ -96,7 +91,7 @@ function arrayToHtml() {
 function generation() {
 	//An array such that numberArray[y][x] is the number of live neighbors gridArray[y][x] has.
 	var numberArray = [];
-	var neighbors = 0;
+	var neighbors;
 	for (var i = 0; i < height; i++) {
 		numberArray.push([]);
 		for (var j = 0; j < width; j++) {
@@ -107,13 +102,13 @@ function generation() {
 	for (var p = 0; p < cells.length; p++) {
 		neighbors = 0;
 		// Possible x's and possible y's. 3 * 3 = 9, minus i,j, the cell itself, gives you its 8 possible neighbors.
-		xPoss = [cells[p][0] - 1, cells[p][0], cells[p][0] + 1];
-		yPoss = [cells[p][1] - 1, cells[p][1], cells[p][1] + 1];
+		yPoss = [cells[p][0] - 1, cells[p][0], cells[p][0] + 1];
+		xPoss = [cells[p][1] - 1, cells[p][1], cells[p][1] + 1];
 		// Iterate through xPoss and yPoss.
-		for (var y = 0; y < yPoss.length; y++) {
-			for (var x = 0; x < xPoss.length; x++) {
+		for (var y = 0; y < 3; y++) {
+			for (var x = 0; x < 3; x++) {
 				// Make sure it's not (i,j), the cell itself.
-				if (!(xPoss[x] === cells[p][0] && yPoss[y] === cells[p][1])) {
+				if (!(x === 1 && y === 1)) {
 					// Surrounded in try catch so it doesn't throw a fit if it goes off the edge. This one doesn't wrap around the sides.
 					try {
 						if (gridArray[yPoss[y]][xPoss[x]] === 1) {
@@ -124,7 +119,8 @@ function generation() {
 			}
 		}
 		// Set numberArray spot that corresponds to gridArray spot to the amount of neighbors.
-		numberArray[cells[p][1]][cells[p][0]] = neighbors;
+		numberArray[cells[p][0]][cells[p][1]] = neighbors;
+		console.log(cells[p][1], cells[p][0], "has ", neighbors, "neighbors");
 	}
 		// Look at every cell and see if it should be alive or dead.
 		for (var i = 0; i < numberArray.length; i++) {
@@ -141,7 +137,7 @@ function generation() {
 					}
 				} else if (numberArray[i][j] > 3) {
 					gridArray[i][j] = 0;
-					if (liveCells.myIndexOf([i, j]) != -1) {
+					if (liveCells.myIndexOf([j, i]) != -1) {
 						liveCells.splice(liveCells.myIndexOf([i, j]), 1);
 					}
 				}
@@ -180,7 +176,7 @@ function generation() {
 		while (!done) {
 			done = true;
 			for (var i = 0; i < output.length; i++) {
-				if (output[i][1] >= width || output[i][1] < 0 || output[i][0] >= height || output[i][0] < 0) {
+				if (output[i][1] >= height || output[i][1] < 0 || output[i][0] >= width || output[i][0] < 0) {
 					output.splice(i, 1);
 					done = false;
 				}
