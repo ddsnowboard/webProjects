@@ -54,6 +54,14 @@ $(document).ready(function () {
 			running = false;
 		}
 	});
+	$("#speed").keyup(function() {
+		if (running) {
+			clearInterval(interval);
+			if (!($("#speed").val() === '0' || $("#speed").val() === '')) {
+				interval = setInterval(generation, 1000/parseInt($("#speed").val(),10));
+			}
+		}
+	});
 	/* 	These lines are to click/drag to flip cells. .on() is different from .mousedown() etc. because it updates live as the DOM changes.
 	See second comment.  */
 	$("table").on('mousedown', ".dead", flipDead)
@@ -120,7 +128,7 @@ function generation() {
 		}
 		// Set numberArray spot that corresponds to gridArray spot to the amount of neighbors.
 		numberArray[cells[p][0]][cells[p][1]] = neighbors;
-		console.log(cells[p][1], cells[p][0], "has ", neighbors, "neighbors");
+		// console.log(cells[p][1], cells[p][0], "has ", neighbors, "neighbors");
 	}
 		// Look at every cell and see if it should be alive or dead.
 		for (var i = 0; i < numberArray.length; i++) {
@@ -224,7 +232,7 @@ function generation() {
 		if (liveCells.myIndexOf([parseInt($(this).parent().attr("id"), 10), parseInt($(this).attr('id'), 10)]) !== -1) {
 			liveCells.splice(liveCells.myIndexOf([parseInt($(this).parent().attr("id"), 10), parseInt($(this).attr('id'), 10)]), 1);
 		}
-		console.log(liveCells);
+		// console.log(liveCells);
 	}
 	// Runs when the mouse enters a dead cell. If the mouse is down, it flips it. Running mousedown() seems inefficient, but it was the easiest
 	// way to keep the cell as the context. I used to have one for live cells, but I didn't like that very much, so I took it out. I could have it where
