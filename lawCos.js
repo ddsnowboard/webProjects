@@ -149,7 +149,8 @@ function drawTriangle(A, B, C, c) {
 	A = parseFloat(A);
 	B = parseFloat(B);
 	C = parseFloat(C);
-	while (!(A>450 || B>450 || C>450)) {
+	// Make it go nearer to the bottom, there's tons of dead space down there. 
+	while (!(A>400 || B>400 || C>400)) {
 		A*=1.1;
 		B*=1.1;
 		C*=1.1;
@@ -162,43 +163,51 @@ function drawTriangle(A, B, C, c) {
 	// Make sure to account for positive cosines. EDIT: Done
 	// So, I'm trying to get it to label the lines with their length. The theory is that you get the middle of the line, that's the first part, before "/2" 
 	// and then add a bit so it's not on the line, that's the 10*the sine of the perpendicular line's angle. So that works. 2 things to do: make this code look less
-	// failed-Ballmer-peak, and set it up so that the distance the number is from the angle is perportional to the angle such that very small angles push it out 
+	// failed-Ballmer-peak, and set it up so that the distance the number is from the angle is proportional to the angle such that very small angles push it out 
 	// more so it doesn't intersect with the lines. Which it should do automatically with lines, but it sometimes doesn't. Hmmm...
 	// Also, print the proper unit with the angle measurement. 
 	context.font = "10pt Arial";
 	var xOffset;
 	var yOffset = 5+(B*Math.sin(c));
-	(Math.cos(c)>=0) ? xOffset = 0 : xOffset = -(B*Math.cos(c));
-	var textX = Math.floor(((xOffset+5+xOffset+5+(B*Math.cos(c)))/2)+10*Math.cos(Math.atan(-(((xOffset+5)-((xOffset+5)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));
-	var textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2+10*Math.sin(Math.atan(-(((xOffset+5)-((xOffset+5)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));
+	(Math.cos(c)>=0) ? xOffset = 15 : xOffset = 15-(B*Math.cos(c));
+	var textX = Math.floor(((xOffset+xOffset+(B*Math.cos(c)))/2)+10*Math.cos(Math.atan(-(((xOffset)-((xOffset)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));
+	var textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2+10*Math.sin(Math.atan(-(((xOffset)-((xOffset)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));
 	context.fillText(origB, textX, textY);
-	textX = Math.floor(((xOffset+5+xOffset+A+5))/2);
+	textX = Math.floor(((xOffset+xOffset+A+5))/2);
 	textY = Math.floor(yOffset-10);
 	context.fillText(origA, textX, textY);
-	textX = Math.floor(((xOffset+A+5+xOffset+5+(B*Math.cos(c)))/2)-20*Math.cos(Math.atan(-(((xOffset+A+5)-(xOffset+5+(B*Math.cos(c)))))/((yOffset)-(yOffset-(B*Math.sin(c)))))));
-	textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2-20*Math.sin(Math.atan(-(((xOffset+5)-((xOffset+5)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));xOffset+5
+	textX = Math.floor(((xOffset+A+xOffset+(B*Math.cos(c)))/2)-20*Math.cos(Math.atan(-(((xOffset+A+5)-(xOffset+(B*Math.cos(c)))))/((yOffset)-(yOffset-(B*Math.sin(c)))))));
+	textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2-20*Math.sin(Math.atan(-(((xOffset)-((xOffset)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));xOffset
 	context.fillText(origC, textX, textY);
-	console.log(c);
-	console.log(c<0.523);
 	if (c<0.7) {
-		textX = (xOffset+5)+50*Math.cos(c/2);
+		textX = (xOffset)+50*Math.cos(c/2);
 		textY = yOffset-50*Math.sin(c/2);
 	}
 	else {
-		textX = (xOffset+5)+18*Math.cos(c/2);
+		textX = (xOffset)+18*Math.cos(c/2);
 		textY = yOffset-18*Math.sin(c/2);
 	}
 	context.fillText(origc, textX, textY);
 	context.beginPath();
-	context.moveTo(xOffset+5,yOffset);
-	context.lineTo((xOffset+5)+B*Math.cos(c),yOffset-(B*Math.sin(c)));
-	context.moveTo(xOffset+5,yOffset);
-	context.lineTo(xOffset+A+5,yOffset);
-	context.lineTo((xOffset+5)+B*Math.cos(c),yOffset-(B*Math.sin(c)));
+	context.moveTo(xOffset,yOffset);
+	context.lineTo((xOffset)+B*Math.cos(c),yOffset-(B*Math.sin(c)));
+	context.moveTo(xOffset,yOffset);
+	context.lineTo(xOffset+A,yOffset);
+	context.lineTo((xOffset)+B*Math.cos(c),yOffset-(B*Math.sin(c)));
 	context.stroke();
 	$("#triangle").drawArc({
 		fillStyle: "grey",
-		x: xOffset+5, y: yOffset,
+		x: xOffset, y: yOffset,
+		radius: 15
+	});
+	$("#triangle").drawArc({
+		fillStyle: "grey",
+		x: (xOffset)+B*Math.cos(c), y: yOffset-(B*Math.sin(c)),
+		radius: 15
+	})
+	.drawArc({
+		fillStyle: "grey",
+		x:xOffset+A, y: yOffset,
 		radius: 15
 	});
 }
