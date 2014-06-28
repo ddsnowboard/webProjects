@@ -170,7 +170,7 @@ function drawTriangle(A, B, C, c) {
 	$("#triangle").drawVector({
 		strokeStyle : 'black',
 		layer : true,
-		name : "baseTriangle",
+		groups : ["baseTriangle"],
 		strokeWidth : 1,
 		x : Math.round(A + xOffset),
 		y : Math.round(yOffset),
@@ -178,8 +178,7 @@ function drawTriangle(A, B, C, c) {
 		l1 : Math.round(A),
 		a2 : Math.round(90 - c),
 		l2 : Math.round(B),
-		closed : true,
-		draggable : true
+		closed : true
 	});
 	$("#triangle").drawArc({
 		fillStyle : "grey",
@@ -188,46 +187,93 @@ function drawTriangle(A, B, C, c) {
 		x : xOffset,
 		y : yOffset,
 		radius : 15,
+		bringToFront: true,
 		draggable : true,
 		dragstart : function () {
-			$("#triangle").removeLayer("baseTriangle")
+			$("#triangle").removeLayerGroup("baseTriangle")
 			.drawLayers()
 			.drawLine({
 				strokeStyle : 'black',
 				strokeWidth : 1,
+				index: 0,
+				groups: ["baseTriangle"],
 				x1 : $("#triangle").getLayer("h2").x,
 				y1 : $("#triangle").getLayer("h2").y,
 				x2 : $("#triangle").getLayer("h3").x,
 				y2 : $("#triangle").getLayer("h3").y,
 				layer : true,
 			})
-			.removeLayer("h2")
-			.removeLayer("h3")
-			.drawArc({
-				fillStyle : "grey",
-				layer : true,
-				name : 'h3',
-				x : (xOffset) + B * Math.cos(c * (Math.PI / 180)),
-				y : yOffset - (B * Math.sin(c * (Math.PI / 180))),
-				radius : 15,
-				draggable : true
+			.drawLine({
+				strokeStyle: "black",
+				strokeWidth: 1,
+				index: 0,
+				groups: ["baseTriangle"],
+				x1: $("#triangle").getLayer("h1").x,
+				y1: $("#triangle").getLayer("h1").y,
+				x2: $("#triangle").getLayer("h2").x,
+				y2: $("#triangle").getLayer("h2").y
 			})
-			.drawArc({
-				fillStyle : "grey",
-				layer : true,
-				name : 'h2',
-				x : xOffset + A,
-				y : yOffset,
-				radius : 15,
-				draggable : true
+			.drawLine({
+				strokeStyle: "black",
+				strokeWidth: 1,
+				index: 0,
+				groups: ["baseTriangle"],
+				x1: $("#triangle").getLayer("h1").x,
+				y1: $("#triangle").getLayer("h1").y,
+				x2: $("#triangle").getLayer("h3").x,
+				y2: $("#triangle").getLayer("h3").y
 			});
 		},
-		drag : function () {}
+		drag : function () {
+			$("#triangle").drawLine({
+				strokeStyle: "black",
+				strokeWidth: 1,
+				index: 0,
+				groups: ["baseTriangle"],
+				x1: $("#triangle").getLayer("h1").x,
+				y1: $("#triangle").getLayer("h1").y,
+				x2: $("#triangle").getLayer("h2").x,
+				y2: $("#triangle").getLayer("h2").y
+			})
+			.drawLine({
+				strokeStyle: "black",
+				strokeWidth: 1,
+				index: 0,
+				groups: ["baseTriangle"],
+				x1: $("#triangle").getLayer("h1").x,
+				y1: $("#triangle").getLayer("h1").y,
+				x2: $("#triangle").getLayer("h3").x,
+				y2: $("#triangle").getLayer("h3").y
+			});
+		}, 
+		// dragstop : function() {
+			// $("#triangle").drawLine({
+				// strokeStyle: "black",
+				// strokeWidth: 1,
+				// index: 0,
+				// groups: ["baseTriangle"],
+				// x1: $("#triangle").getLayer("h1").x,
+				// y1: $("#triangle").getLayer("h1").y,
+				// x2: $("#triangle").getLayer("h2").x,
+				// y2: $("#triangle").getLayer("h2").y
+			// })
+			// .drawLine({
+				// strokeStyle: "black",
+				// strokeWidth: 1,
+				// index: 0,
+				// groups: ["baseTriangle"],
+				// x1: $("#triangle").getLayer("h1").x,
+				// y1: $("#triangle").getLayer("h1").y,
+				// x2: $("#triangle").getLayer("h3").x,
+				// y2: $("#triangle").getLayer("h3").y
+			// });
+		// }
 	});
 	$("#triangle").drawArc({
 		fillStyle : "grey",
 		layer : true,
 		name : 'h3',
+		bringToFront: true,
 		x : (xOffset) + B * Math.cos(c * (Math.PI / 180)),
 		y : yOffset - (B * Math.sin(c * (Math.PI / 180))),
 		radius : 15,
@@ -237,6 +283,7 @@ function drawTriangle(A, B, C, c) {
 		fillStyle : "grey",
 		layer : true,
 		name : 'h2',
+		bringToFront: true,
 		x : xOffset + A,
 		y : yOffset,
 		radius : 15,
@@ -338,6 +385,23 @@ $(document).ready(function () {
 		}
 	});
 	submit.mousedown();
+	$("#triangle").mouseup(function() {
+		$("#triangle").clearCanvas();
+		$("#triangle").drawLine({
+			groups: ["baseTriangle"],
+			strokeStyle: "black",
+			strokeWidth: 1,
+			layer: true,
+			x1: $("#triangle").getLayer("h2").x,
+			y1: $("#triangle").getLayer("h2").y,
+			x2: $("#triangle").getLayer("h1").x,
+			y2: $("#triangle").getLayer("h1").y,
+			x3: $("#triangle").getLayer("h3").x,
+			y3: $("#triangle").getLayer("h3").y,
+			index: 1,
+		});
+		console.log("worked");
+	});
 });
 
 // $("#triangle").draw({
