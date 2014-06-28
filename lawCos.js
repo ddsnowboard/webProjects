@@ -83,43 +83,39 @@ function lawOfCosines(A, B, C, c) {
 	if (A === '') {
 		quest = "A";
 		lastChanged = "A";
-	}
-	else if (B === '') {
+	} else if (B === '') {
 		quest = "B";
 		lastChanged = "B";
-	}
-	else if (C === '') {
+	} else if (C === '') {
 		quest = "C";
 		lastChanged = "C";
-	}
-	else if (c === '') {
+	} else if (c === '') {
 		quest = "c";
 		lastChanged = 'c';
-	}
-	else {
+	} else {
 		quest = lastChanged;
 	}
-	
-	switch (quest){
-		case "A":
+
+	switch (quest) {
+	case "A":
 		B = parseFloat(B);
 		C = parseFloat(C);
 		c = parseFloat(c);
 		A = 0.0;
 		return [Math.round(100 * (quad(1, -1 * (2 * B * Math.cos(radians(c))), Math.pow(B, 2) - Math.pow(C, 2)))) / 100, quest];
-		case "B":
+	case "B":
 		A = parseFloat(A);
 		C = parseFloat(C);
 		c = parseFloat(c);
 		B = 0.0;
 		return [Math.round(100 * (quad(1, -1 * (2 * A * Math.cos(radians(c))), Math.pow(A, 2) - Math.pow(C, 2)))) / 100, quest];
-		case "C":
+	case "C":
 		A = parseFloat(A);
 		B = parseFloat(B);
 		c = parseFloat(c);
 		C = 0.0;
 		return [Math.round(100 * (Math.sqrt((Math.pow(A, 2) + Math.pow(B, 2)) - (2 * A * B * Math.cos(radians(c)))))) / 100, quest];
-		case 'c':
+	case 'c':
 		A = parseFloat(A);
 		B = parseFloat(B);
 		C = parseFloat(C);
@@ -132,83 +128,92 @@ function drawTriangle(A, B, C, c) {
 	// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
 	var canvas = document.getElementById('triangle');
 	var context = canvas.getContext("2d");
-	context.clearRect(0,0,canvas.width, canvas.height);
+	$("#triangle").clearCanvas();
 	if (!(A && B && C && c)) {
 		return;
 	}
 	var origA = A;
 	var origB = B;
-	var origC = C; 
+	var origC = C;
 	var origc = c;
-	($('input:radio[name=degrees]:checked').val() === 'radians') ? origc+=" rad" : origc+="°";
+	($('input:radio[name=degrees]:checked').val() === 'radians') ? origc += " rad" : origc += "°";
 	if ($('input:radio[name=degrees]:checked').val() === 'radians') {
-		c=parseRadians(c, 'in')*(Math.PI/180);
+		c = parseRadians(c, 'in') * (Math.PI / 180);
 	} else {
-		c=parseFloat(c)*(Math.PI/180);
+		c = parseFloat(c) * (Math.PI / 180);
 	}
 	A = parseFloat(A);
 	B = parseFloat(B);
 	C = parseFloat(C);
-	// Make it go nearer to the bottom, there's tons of dead space down there. 
-	while (!(A>400 || B>400 || C>400)) {
-		A*=1.1;
-		B*=1.1;
-		C*=1.1;
+	// Make it go nearer to the bottom, there's tons of dead space down there.
+	while (!(A > 400 || B > 400 || C > 400)) {
+		A *= 1.1;
+		B *= 1.1;
+		C *= 1.1;
 	}
-	while (!(A<500 && B<500 && C<500)) {
-		A*=0.9;
-		B*=0.9;
-		C*=0.9;
+	while (!(A < 500 && B < 500 && C < 500)) {
+		A *= 0.9;
+		B *= 0.9;
+		C *= 0.9;
 	}
 	// Make sure to account for positive cosines. EDIT: Done
-	// So, I'm trying to get it to label the lines with their length. The theory is that you get the middle of the line, that's the first part, before "/2" 
+	// So, I'm trying to get it to label the lines with their length. The theory is that you get the middle of the line, that's the first part, before "/2"
 	// and then add a bit so it's not on the line, that's the 10*the sine of the perpendicular line's angle. So that works. 2 things to do: make this code look less
-	// failed-Ballmer-peak, and set it up so that the distance the number is from the angle is proportional to the angle such that very small angles push it out 
+	// failed-Ballmer-peak, and set it up so that the distance the number is from the angle is proportional to the angle such that very small angles push it out
 	// more so it doesn't intersect with the lines. Which it should do automatically with lines, but it sometimes doesn't. Hmmm...
-	// Also, print the proper unit with the angle measurement. 
+	// Also, print the proper unit with the angle measurement. EDIT: Done!
 	context.font = "10pt Arial";
 	var xOffset;
-	var yOffset = 5+(B*Math.sin(c));
-	(Math.cos(c)>=0) ? xOffset = 15 : xOffset = 15-(B*Math.cos(c));
-	var textX = Math.floor(((xOffset+xOffset+(B*Math.cos(c)))/2)+10*Math.cos(Math.atan(-(((xOffset)-((xOffset)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));
-	var textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2+10*Math.sin(Math.atan(-(((xOffset)-((xOffset)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));
-	context.fillText(origB, textX, textY);
-	textX = Math.floor(((xOffset+xOffset+A+5))/2);
-	textY = Math.floor(yOffset-10);
-	context.fillText(origA, textX, textY);
-	textX = Math.floor(((xOffset+A+xOffset+(B*Math.cos(c)))/2)-20*Math.cos(Math.atan(-(((xOffset+A+5)-(xOffset+(B*Math.cos(c)))))/((yOffset)-(yOffset-(B*Math.sin(c)))))));
-	textY = Math.floor((yOffset+yOffset-(B*Math.sin(c)))/2-20*Math.sin(Math.atan(-(((xOffset)-((xOffset)+B*Math.cos(c)))/((yOffset)-(yOffset-(B*Math.sin(c))))))));xOffset
-	context.fillText(origC, textX, textY);
-	if (c<0.7) {
-		textX = (xOffset)+50*Math.cos(c/2);
-		textY = yOffset-50*Math.sin(c/2);
-	}
-	else {
-		textX = (xOffset)+18*Math.cos(c/2);
-		textY = yOffset-18*Math.sin(c/2);
-	}
-	context.fillText(origc, textX, textY);
-	context.beginPath();
-	context.moveTo(xOffset,yOffset);
-	context.lineTo((xOffset)+B*Math.cos(c),yOffset-(B*Math.sin(c)));
-	context.moveTo(xOffset,yOffset);
-	context.lineTo(xOffset+A,yOffset);
-	context.lineTo((xOffset)+B*Math.cos(c),yOffset-(B*Math.sin(c)));
-	context.stroke();
-	$("#triangle").drawArc({
-		fillStyle: "grey",
-		x: xOffset, y: yOffset,
-		radius: 15
+	var yOffset = 15 + (B * Math.sin(c));
+	(Math.cos(c) >= 0) ? xOffset = 15 : xOffset = 15 - (B * Math.cos(c));
+	// Hey, if you refactor it to use vectors, it'll be way cleaner!
+	$("#triangle").draw({
+		fn : function (ctx) {
+			ctx.fillStyle = "black";
+			ctx.strokeStyle = "black";
+			var textX = Math.floor(((xOffset + xOffset + (B * Math.cos(c))) / 2) + 10 * Math.cos(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
+			var textY = Math.floor((yOffset + yOffset - (B * Math.sin(c))) / 2 + 10 * Math.sin(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
+			ctx.beginPath();
+			ctx.moveTo(xOffset, yOffset);
+			ctx.lineTo((xOffset) + B * Math.cos(c), yOffset - (B * Math.sin(c)));
+			ctx.moveTo(xOffset, yOffset);
+			ctx.lineTo(xOffset + A, yOffset);
+			ctx.lineTo((xOffset) + B * Math.cos(c), yOffset - (B * Math.sin(c)));
+			ctx.stroke();
+			ctx.fillText(origB, textX, textY);
+			textX = Math.floor(((xOffset + xOffset + A + 5)) / 2);
+			textY = Math.floor(yOffset - 10);
+			ctx.fillText(origA, textX, textY);
+			textX = Math.floor(((xOffset + A + xOffset + (B * Math.cos(c))) / 2) - 20 * Math.cos(Math.atan( - (((xOffset + A + 5) - (xOffset + (B * Math.cos(c))))) / ((yOffset) - (yOffset - (B * Math.sin(c)))))));
+			textY = Math.floor((yOffset + yOffset - (B * Math.sin(c))) / 2 - 20 * Math.sin(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
+			ctx.fillText(origC, textX, textY);
+			if (c < 0.7) {
+				textX = (xOffset) + 50 * Math.cos(c / 2);
+				textY = yOffset - 50 * Math.sin(c / 2);
+			} else {
+				textX = (xOffset) + 18 * Math.cos(c / 2);
+				textY = yOffset - 18 * Math.sin(c / 2);
+			}
+			ctx.fillText(origc, textX, textY);
+		}
 	});
 	$("#triangle").drawArc({
-		fillStyle: "grey",
-		x: (xOffset)+B*Math.cos(c), y: yOffset-(B*Math.sin(c)),
-		radius: 15
+		fillStyle : "grey",
+		x : xOffset,
+		y : yOffset,
+		radius : 15
+	});
+	$("#triangle").drawArc({
+		fillStyle : "grey",
+		x : (xOffset) + B * Math.cos(c),
+		y : yOffset - (B * Math.sin(c)),
+		radius : 15
 	})
 	.drawArc({
-		fillStyle: "grey",
-		x:xOffset+A, y: yOffset,
-		radius: 15
+		fillStyle : "grey",
+		x : xOffset + A,
+		y : yOffset,
+		radius : 15
 	});
 }
 $(document).ready(function () {
@@ -219,7 +224,7 @@ $(document).ready(function () {
 	var submit = $("#submit");
 	var clear = $('#clear');
 	var pi = $('#pi');
-	
+
 	pi.mousedown(function () {
 		if ($("#smallc").is(":focus")) {
 			spot = $("#smallc").caret();
@@ -234,14 +239,14 @@ $(document).ready(function () {
 		$("#smallc").focus();
 		$("#smallc").caret(spot + 1);
 	});
-	
+
 	clear.mousedown(function () {
 		$("#A").val('');
 		$("#B").val('');
 		$("#C").val('');
 		$("#smallc").val('');
 		var canvas = document.getElementById('triangle');
-		canvas.getContext('2d').clearRect(0,0,canvas.width, canvas.height);
+		canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 	});
 	submit.mousedown(function () {
 		var smallc = $("#smallc").val();
@@ -251,27 +256,26 @@ $(document).ready(function () {
 		}
 		var ans = lawOfCosines($("#A").val(), $("#B").val(), $("#C").val(), smallc);
 		//This is where we use the other part of the result array.
-		// ans[1] will be A, B, C, or c, and this way is less repititious than the switch I had before. 
-		if (ans[1]==='c') {
+		// ans[1] will be A, B, C, or c, and this way is less repititious than the switch I had before.
+		if (ans[1] === 'c') {
 			//Make it radians if we need to.
 			if ($('input:radio[name=degrees]:checked').val() === 'radians') {
 				$('#smallc').val(parseRadians(ans[0], 'out'));
 			} else {
 				$('#smallc').val(ans[0]);
 			}
-		}
-		else {
-			$("#"+ans[1]).val(ans[0]);
+		} else {
+			$("#" + ans[1]).val(ans[0]);
 		}
 		drawTriangle($("#A").val(), $("#B").val(), $("#C").val(), $("#smallc").val());
 	});
-	$(".box").keydown(function(event) {
+	$(".box").keydown(function (event) {
 		//13 is enter, so if we press enter anywhere, it will submit. It even changes the look as if you clicked it, which I always liked.
 		if (event.which === 13) {
 			submit.mousedown();
 		}
 	});
-	$(".box").keyup(function(event) {
+	$(".box").keyup(function (event) {
 		if (event.which === 13) {
 			submit.removeClass('down');
 		}
@@ -306,4 +310,5 @@ $(document).ready(function () {
 			$("#smallc").caret(spot);
 		}
 	});
+	submit.mousedown();
 });
