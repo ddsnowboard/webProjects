@@ -165,69 +165,83 @@ function drawTriangle(A, B, C, c) {
 	// Also, print the proper unit with the angle measurement. EDIT: Done!
 	context.font = "10pt Arial";
 	var xOffset;
-	var yOffset = 15 + (B * Math.sin(c*(Math.PI/180)));
-	(Math.cos(c*(Math.PI/180)) >= 0) ? xOffset = 15 : xOffset = 15 - (B * Math.cos(c*(Math.PI/180)));
-	// Hey, if you refactor it to use vectors, it'll be way cleaner!
-	// $("#triangle").draw({
-		// fn : function (ctx) {
-			// ctx.fillStyle = "black";
-			// ctx.strokeStyle = "black";
-			// var textX = Math.floor(((xOffset + xOffset + (B * Math.cos(c))) / 2) + 10 * Math.cos(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
-			// var textY = Math.floor((yOffset + yOffset - (B * Math.sin(c))) / 2 + 10 * Math.sin(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
-			// ctx.beginPath();
-			// ctx.moveTo(xOffset, yOffset);
-			// ctx.lineTo((xOffset) + B * Math.cos(c), yOffset - (B * Math.sin(c)));
-			// ctx.moveTo(xOffset, yOffset);
-			// ctx.lineTo(xOffset + A, yOffset);
-			// ctx.lineTo((xOffset) + B * Math.cos(c), yOffset - (B * Math.sin(c)));
-			// ctx.stroke();
-			// ctx.fillText(origB, textX, textY);
-			// textX = Math.floor(((xOffset + xOffset + A + 5)) / 2);
-			// textY = Math.floor(yOffset - 10);
-			// ctx.fillText(origA, textX, textY);
-			// textX = Math.floor(((xOffset + A + xOffset + (B * Math.cos(c))) / 2) - 20 * Math.cos(Math.atan( - (((xOffset + A + 5) - (xOffset + (B * Math.cos(c))))) / ((yOffset) - (yOffset - (B * Math.sin(c)))))));
-			// textY = Math.floor((yOffset + yOffset - (B * Math.sin(c))) / 2 - 20 * Math.sin(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
-			// ctx.fillText(origC, textX, textY);
-			// if (c < 0.7) {
-				// textX = (xOffset) + 50 * Math.cos(c / 2);
-				// textY = yOffset - 50 * Math.sin(c / 2);
-			// } else {
-				// textX = (xOffset) + 18 * Math.cos(c / 2);
-				// textY = yOffset - 18 * Math.sin(c / 2);
-			// }
-			// ctx.fillText(origc, textX, textY);
-		// }
-	// });
-	console.log(A,B,C,c, xOffset);
+	var yOffset = 15 + (B * Math.sin(c * (Math.PI / 180)));
+	(Math.cos(c * (Math.PI / 180)) >= 0) ? xOffset = 15 : xOffset = 15 - (B * Math.cos(c * (Math.PI / 180)));
 	$("#triangle").drawVector({
-		strokeStyle: 'black',
-		strokeWidth: 1,
-		x: Math.round(A+xOffset),
-		y: Math.round(yOffset),
-		a1: 270,
-		l1: Math.round(A),
-		a2: Math.round(90-c),
-		l2: Math.round(B), 
-		closed: true
-		});
-	// $("#triangle").drawArc({
-		// fillStyle : "grey",
-		// x : xOffset,
-		// y : yOffset,
-		// radius : 15
-	// });
-	// $("#triangle").drawArc({
-		// fillStyle : "grey",
-		// x : (xOffset) + B * Math.cos(c),
-		// y : yOffset - (B * Math.sin(c)),
-		// radius : 15
-	// })
-	// .drawArc({
-		// fillStyle : "grey",
-		// x : xOffset + A,
-		// y : yOffset,
-		// radius : 15
-	// });
+		strokeStyle : 'black',
+		layer : true,
+		name : "baseTriangle",
+		strokeWidth : 1,
+		x : Math.round(A + xOffset),
+		y : Math.round(yOffset),
+		a1 : 270,
+		l1 : Math.round(A),
+		a2 : Math.round(90 - c),
+		l2 : Math.round(B),
+		closed : true,
+		draggable : true
+	});
+	$("#triangle").drawArc({
+		fillStyle : "grey",
+		layer : true,
+		name : "h1",
+		x : xOffset,
+		y : yOffset,
+		radius : 15,
+		draggable : true,
+		dragstart : function () {
+			$("#triangle").removeLayer("baseTriangle")
+			.drawLayers()
+			.drawLine({
+				strokeStyle : 'black',
+				strokeWidth : 1,
+				x1 : $("#triangle").getLayer("h2").x,
+				y1 : $("#triangle").getLayer("h2").y,
+				x2 : $("#triangle").getLayer("h3").x,
+				y2 : $("#triangle").getLayer("h3").y,
+				layer : true,
+			})
+			.removeLayer("h2")
+			.removeLayer("h3")
+			.drawArc({
+				fillStyle : "grey",
+				layer : true,
+				name : 'h3',
+				x : (xOffset) + B * Math.cos(c * (Math.PI / 180)),
+				y : yOffset - (B * Math.sin(c * (Math.PI / 180))),
+				radius : 15,
+				draggable : true
+			})
+			.drawArc({
+				fillStyle : "grey",
+				layer : true,
+				name : 'h2',
+				x : xOffset + A,
+				y : yOffset,
+				radius : 15,
+				draggable : true
+			});
+		},
+		drag : function () {}
+	});
+	$("#triangle").drawArc({
+		fillStyle : "grey",
+		layer : true,
+		name : 'h3',
+		x : (xOffset) + B * Math.cos(c * (Math.PI / 180)),
+		y : yOffset - (B * Math.sin(c * (Math.PI / 180))),
+		radius : 15,
+		draggable : true
+	});
+	$("#triangle").drawArc({
+		fillStyle : "grey",
+		layer : true,
+		name : 'h2',
+		x : xOffset + A,
+		y : yOffset,
+		radius : 15,
+		draggable : true
+	});
 }
 $(document).ready(function () {
 	// Which radio button you've chosen. Defaults to degrees.
@@ -325,3 +339,34 @@ $(document).ready(function () {
 	});
 	submit.mousedown();
 });
+
+// $("#triangle").draw({
+// fn : function (ctx) {
+// ctx.fillStyle = "black";
+// ctx.strokeStyle = "black";
+// var textX = Math.floor(((xOffset + xOffset + (B * Math.cos(c))) / 2) + 10 * Math.cos(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
+// var textY = Math.floor((yOffset + yOffset - (B * Math.sin(c))) / 2 + 10 * Math.sin(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
+// ctx.beginPath();
+// ctx.moveTo(xOffset, yOffset);
+// ctx.lineTo((xOffset) + B * Math.cos(c), yOffset - (B * Math.sin(c)));
+// ctx.moveTo(xOffset, yOffset);
+// ctx.lineTo(xOffset + A, yOffset);
+// ctx.lineTo((xOffset) + B * Math.cos(c), yOffset - (B * Math.sin(c)));
+// ctx.stroke();
+// ctx.fillText(origB, textX, textY);
+// textX = Math.floor(((xOffset + xOffset + A + 5)) / 2);
+// textY = Math.floor(yOffset - 10);
+// ctx.fillText(origA, textX, textY);
+// textX = Math.floor(((xOffset + A + xOffset + (B * Math.cos(c))) / 2) - 20 * Math.cos(Math.atan( - (((xOffset + A + 5) - (xOffset + (B * Math.cos(c))))) / ((yOffset) - (yOffset - (B * Math.sin(c)))))));
+// textY = Math.floor((yOffset + yOffset - (B * Math.sin(c))) / 2 - 20 * Math.sin(Math.atan( - (((xOffset) - ((xOffset) + B * Math.cos(c))) / ((yOffset) - (yOffset - (B * Math.sin(c))))))));
+// ctx.fillText(origC, textX, textY);
+// if (c < 0.7) {
+// textX = (xOffset) + 50 * Math.cos(c / 2);
+// textY = yOffset - 50 * Math.sin(c / 2);
+// } else {
+// textX = (xOffset) + 18 * Math.cos(c / 2);
+// textY = yOffset - 18 * Math.sin(c / 2);
+// }
+// ctx.fillText(origc, textX, textY);
+// }
+// });
