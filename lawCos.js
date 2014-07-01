@@ -90,6 +90,11 @@ function textPosVec(x, y, m, d) {
 		return [midX-(10*Math.sin(d*(Math.PI/180))),midY+(10*Math.cos(d*(Math.PI/180)))];
 	}
 }
+// THIS DOES NOT WORK IF THE ΔX IS 0, i.e. is a right angle.
+function textPosLine(x1, y1, x2, y2) {
+var midX = (x1+x2)/2;
+var midY = (y2+y1)/2;
+// Don't use tan till later, just use slope and opposite-reciprocal. Figure out how to handle undefined slope. 
 function lawOfCosines(A, B, C, c) {
 	//Find which one we're looking for. Whichever one is empty, that's the one we need to find. Turn all the others into int's
 	// for math purposes.
