@@ -95,7 +95,6 @@ function textPosLine(x1, y1, x2, y2) {
 	var slope;
 	if (x2 !== x1) {
 		slope = (y2 - y1) / (x2 - x1);
-		console.log(slope);
 	} else {
 		slope = 'u';
 	}
@@ -121,6 +120,7 @@ function redrawText(a) {
 		// h3x:
 		// h3y: 
 		// scalar: 
+		// choice: 
 	// }
 	$("#triangle").removeLayerGroup("text");
 	$("#triangle").drawLayers();
@@ -176,7 +176,7 @@ function redrawText(a) {
 		groups: ["text"],
 		x: a.h1x+20, y: a.h1y-20,
 		fontSize: '11pt',
-		text: lawOfCosines(distance(a.h2x-a.h1x, a.h2y-a.h1y).toString(),distance(a.h3x-a.h1x, a.h3y-a.h1y).toString(),distance(a.h3x-a.h2x,a.h3y-a.h2y).toString(), '')[0].toFixed(2).toString(),
+		text: a.choice === 'degrees' ? lawOfCosines(distance(a.h2x-a.h1x, a.h2y-a.h1y).toString(),distance(a.h3x-a.h1x, a.h3y-a.h1y).toString(), distance(a.h3x-a.h2x,a.h3y-a.h2y).toString(), '')[0].toFixed(2).toString()+"°" : parseRadians(parseInt(lawOfCosines(distance(a.h2x-a.h1x, a.h2y-a.h1y).toString(),distance(a.h3x-a.h1x, a.h3y-a.h1y).toString(),distance(a.h3x-a.h2x,a.h3y-a.h2y).toString(), '')[0], 10), 'out').toString(),
 	});
 }
 function lawOfCosines(A, B, C, c) {
@@ -227,7 +227,7 @@ function lawOfCosines(A, B, C, c) {
 		return [Math.round(100 * (Math.acos((Math.pow(C, 2) - ((Math.pow(A, 2) + Math.pow(B, 2)))) / (-2 * A * B))) * (180 / Math.PI)) / 100, quest];
 	}
 }
-function drawTriangle(A, B, C, c) {
+function drawTriangle(A, B, C, c, choice) {
 	// Pretty pictures!
 	// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
 	var canvas = document.getElementById('triangle');
@@ -241,13 +241,13 @@ function drawTriangle(A, B, C, c) {
 	var origA = A;
 	var origB = B;
 	var origC = C;
-	var origc;
-	if ($('input:radio[name=degrees]:checked').val() === 'radians') {
+	var printc;
+	if (choice === 'radians') {
 		c = parseRadians(c, 'in');
-		origc = c+ " rad";
+		printc = $("#smallc").val() + " rad";
 	} else {
 		c = parseFloat(c);
-		origc = c+ "°";
+		printc = $("#smallc").val() + "°";
 	}
 	A = parseFloat(A);
 	B = parseFloat(B);
@@ -270,7 +270,6 @@ function drawTriangle(A, B, C, c) {
 	// and then add a bit so it's not on the line, that's the 10*the sine of the perpendicular line's angle. So that works. 2 things to do: make this code look less
 	// failed-Ballmer-peak, and set it up so that the distance the number is from the angle is proportional to the angle such that very small angles push it out
 	// more so it doesn't intersect with the lines. Which it should do automatically with lines, but it sometimes doesn't. Hmmm...
-	// Also, print the proper unit with the angle measurement. EDIT: Done!
 	context.font = "10pt Arial";
 	var xOffset;
 	var yOffset = 15 + (B * Math.sin(c * (Math.PI / 180)));
@@ -499,6 +498,7 @@ function drawTriangle(A, B, C, c) {
 				h2y: $("#triangle").getLayer("h2").y,
 				h3x: $("#triangle").getLayer("h3").x,
 				h3y: $("#triangle").getLayer("h3").y,
+				choice: choice
 			});
 			$("#triangle").drawLine({
 				strokeStyle : "black",
@@ -564,7 +564,7 @@ function drawTriangle(A, B, C, c) {
 		groups: ["text"],
 		x: xOffset+20, y: yOffset-20,
 		fontSize: '11pt',
-		text: origc
+		text: printc
 	});
 }
 $(document).ready(function () {
@@ -640,9 +640,11 @@ $(document).ready(function () {
 			}
 		}
 		choice = 'degrees';
+		drawTriangle($("#A").val(), $("#B").val(), $("#C").val(), $("#smallc").val(), choice);
 	});
 	$("#radians").click(function () {
 		$("#pi").css("visibility", "visible");
+		drawTriangle($("#A").val(), $("#B").val(), $("#C").val(), $("#smallc").val(), choice);
 		//Same as above.
 		if (choice === 'degrees') {
 			if ($("#smallc").val() !== '') {
