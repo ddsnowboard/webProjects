@@ -2,8 +2,8 @@
 
 //This function switches degrees to radians. The opposite is done manually because I'm lazy.
 
-// I'M GETTING CLOSE, BUT IT STILL WON'T CHANGE THE UNITS OF THE ANGLE MEASURE WHEN I CLICK THE BUTTON. 
-// I'M GETTING THERE, THOUGH. 
+// I'M GETTING CLOSE, BUT IT STILL WON'T CHANGE THE UNITS OF THE ANGLE MEASURE WHEN I CLICK THE BUTTON.
+// I'M GETTING THERE, THOUGH.
 lastChanged = '';
 moved = false;
 var choice = 'degrees';
@@ -15,6 +15,15 @@ var radians = function (x) {
 var quad = function (g, e, f) {
 	return (-e + Math.sqrt(Math.pow(e, 2) - 4 * g * f)) / (2 * g);
 };
+var formatNum = function (n) {
+	// Give it a number, and if it can, it'll make it an integer, otherwise, it gives it back to you.
+	if (n.toFixed(2) % 1 == 0) {
+		return parseInt(n, 10).toString();
+	} else {
+		return n.toFixed(2).toString();
+	}
+}
+
 //This function either takes a radian input and puts it in degrees to pass to lawOfCosines(), when the "direction"
 //parameter is "in", or takes a degree measurement and
 //puts it in fractional, easy to read radians measure
@@ -139,7 +148,8 @@ function redrawText(a) {
 		x : textPosLine(a.h1x, a.h1y, a.h2x, a.h2y)[0],
 		y : textPosLine(a.h1x, a.h1y, a.h2x, a.h2y)[1],
 		fontSize : '11pt',
-		text : (distance(a.h2x - a.h1x, a.h2y - a.h1y) / (scalar)).toFixed(2).toString(),
+		// text : (distance(a.h2x - a.h1x, a.h2y - a.h1y)/ (scalar)%1 == 0 ? (parseInt(distance(a.h2x - a.h1x, a.h2y - a.h1y) / (scalar)).toString(), 10).toString() : (distance(a.h2x - a.h1x, a.h2y - a.h1y) / (scalar)).toFixed(2).toString()),
+		text : formatNum(distance(a.h2x - a.h1x, a.h2y - a.h1y) / (scalar)),
 	});
 	// h1 to h3
 	$("#triangle").drawText({
@@ -152,7 +162,7 @@ function redrawText(a) {
 		x : textPosLine(a.h1x, a.h1y, a.h3x, a.h3y)[0],
 		y : textPosLine(a.h1x, a.h1y, a.h3x, a.h3y)[1],
 		fontSize : '11pt',
-		text : (distance(a.h3x - a.h1x, a.h3y - a.h1y) / (scalar)).toFixed(2).toString(),
+		text : formatNum(distance(a.h3x - a.h1x, a.h3y - a.h1y) / (scalar)),
 	});
 
 	// h2 to h3
@@ -166,11 +176,10 @@ function redrawText(a) {
 		x : textPosLine(a.h3x, a.h3y, a.h2x, a.h2y)[0],
 		y : textPosLine(a.h3x, a.h3y, a.h2x, a.h2y)[1],
 		fontSize : '11pt',
-		text : (distance(a.h2x - a.h3x, a.h2y - a.h3y) / (scalar)).toFixed(2).toString(),
+		text : formatNum(distance(a.h2x - a.h3x, a.h2y - a.h3y) / (scalar)),
 	});
 
 	// Angle
-	console.log(choice)
 	$("#triangle").drawText({
 		fillStyle : "black",
 		strokeStyle : "black",
@@ -233,8 +242,6 @@ function lawOfCosines(A, B, C, c) {
 	}
 }
 function drawTriangle(A, B, C, c) {
-	// Pretty pictures!
-	// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
 	var canvas = document.getElementById('triangle');
 	var context = canvas.getContext("2d");
 	$("#triangle").removeLayers();
@@ -257,6 +264,7 @@ function drawTriangle(A, B, C, c) {
 	B = parseFloat(B);
 	C = parseFloat(C);
 	// Make it go nearer to the bottom, there's tons of dead space down there.
+	scalar = 1;
 	while (!(A > 400 || B > 400 || C > 400)) {
 		A *= 1.1;
 		B *= 1.1;
@@ -277,7 +285,7 @@ function drawTriangle(A, B, C, c) {
 	context.font = "10pt Arial";
 	var xOffset;
 	var yOffset = 15 + (B * Math.sin(c * (Math.PI / 180)));
-	(Math.cos(c * (Math.PI / 180)) >= 0) ? xOffset = 17 : xOffset = 17 - (B * Math.cos(c * (Math.PI / 180)));
+	(Math.cos(c * (Math.PI / 180)) >= 0) ? xOffset = 25 : xOffset = 25 - (B * Math.cos(c * (Math.PI / 180)));
 	$("#triangle").drawVector({
 		strokeStyle : 'black',
 		layer : true,
@@ -530,7 +538,6 @@ function drawTriangle(A, B, C, c) {
 		groups : ["text"],
 		x : textPosVec(xOffset, yOffset, B, 90 + c)[0],
 		y : textPosVec(xOffset, yOffset, B, 90 + c)[1],
-		// x: 50, y: 50,
 		fontSize : '11pt',
 		text : origB.toString(),
 	});
@@ -638,35 +645,34 @@ $(document).ready(function () {
 			if ($("#smallc").val() !== '') {
 				$('#smallc').val(Math.round(100 * parseRadians($('#smallc').val(), 'in')) / 100);
 			}
-			redrawText({
-				h1x : $("#triangle").getLayer("h1").x,
-				h1y : $("#triangle").getLayer("h1").y,
-				h2x : $("#triangle").getLayer("h2").x,
-				h2y : $("#triangle").getLayer("h2").y,
-				h3x : $("#triangle").getLayer("h3").x,
-				h3y : $("#triangle").getLayer("h3").y,
-			});
 		}
 		choice = 'degrees';
-		drawTriangle($("#A").val(), $("#B").val(), $("#C").val(), $("#smallc").val());
+		redrawText({
+			h1x : $("#triangle").getLayer("h1").x,
+			h1y : $("#triangle").getLayer("h1").y,
+			h2x : $("#triangle").getLayer("h2").x,
+			h2y : $("#triangle").getLayer("h2").y,
+			h3x : $("#triangle").getLayer("h3").x,
+			h3y : $("#triangle").getLayer("h3").y,
+		});
 	});
-		$("#radians").click(function () {
+	$("#radians").click(function () {
 		$("#pi").css("visibility", "visible");
 		//Same as above.
 		if (choice === 'degrees') {
 			if ($("#smallc").val() !== '') {
 				$('#smallc').val(parseRadians($('#smallc').val(), 'out'));
 			}
-			redrawText({
-				h1x : $("#triangle").getLayer("h1").x,
-				h1y : $("#triangle").getLayer("h1").y,
-				h2x : $("#triangle").getLayer("h2").x,
-				h2y : $("#triangle").getLayer("h2").y,
-				h3x : $("#triangle").getLayer("h3").x,
-				h3y : $("#triangle").getLayer("h3").y,
-			});
 		}
 		choice = 'radians';
+		redrawText({
+			h1x : $("#triangle").getLayer("h1").x,
+			h1y : $("#triangle").getLayer("h1").y,
+			h2x : $("#triangle").getLayer("h2").x,
+			h2y : $("#triangle").getLayer("h2").y,
+			h3x : $("#triangle").getLayer("h3").x,
+			h3y : $("#triangle").getLayer("h3").y,
+		});
 	});
 	//If you type p, it changes to π automatically.
 	$("#smallc").keyup(function (event) {
