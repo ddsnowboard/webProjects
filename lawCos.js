@@ -1,8 +1,13 @@
 /* TODO: Make a visual representation of the triangle, perhaps that you can click and drag on to change the numbers in the boxes. EDIT: Done! */
 
 //This function switches degrees to radians. The opposite is done manually because I'm lazy.
+
+// I'M GETTING CLOSE, BUT IT STILL WON'T CHANGE THE UNITS OF THE ANGLE MEASURE WHEN I CLICK THE BUTTON. 
+// I'M GETTING THERE, THOUGH. 
 lastChanged = '';
 moved = false;
+var choice = 'degrees';
+var scalar = 1;
 var radians = function (x) {
 	return x * (Math.PI / 180);
 };
@@ -98,85 +103,85 @@ function textPosLine(x1, y1, x2, y2) {
 	} else {
 		slope = 'u';
 	}
-	if (slope == 'u' || Math.abs(slope)>2) {
+	if (slope == 'u' || Math.abs(slope) > 2) {
 		return [midX - 10, midY];
-	} else if (slope === 0 || Math.abs(slope)<.3) {
+	} else if (slope === 0 || Math.abs(slope) < .3) {
 		return [midX, midY + 10];
 	} else if (slope > 0) {
-		return [midX - (10 * .3*slope), midY + (10 * (1 / slope))];
+		return [midX - (10 * .3 * slope), midY + (10 * (1 / slope))];
 	} else if (slope < 0) {
 		return [midX + (10 * slope), midY + (10 * (1 / slope))];
 	}
 }
 function distance(a, b) {
-	return Math.sqrt(Math.pow(a, 2)+Math.pow(b,2));
+	return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 }
 function redrawText(a) {
 	// a = {
-		// h1x:
-		// h1y:
-		// h2x:
-		// h2y: 
-		// h3x:
-		// h3y: 
-		// scalar: 
-		// choice: 
+	// h1x:
+	// h1y:
+	// h2x:
+	// h2y:
+	// h3x:
+	// h3y:
 	// }
 	$("#triangle").removeLayerGroup("text");
 	$("#triangle").drawLayers();
-	
+
 	// h1 to h2
 	$("#triangle").drawText({
 		fillStyle : "black",
 		strokeStyle : "black",
 		layer : true,
-		name: "A",
+		name : "A",
 		strokeWidth : 1,
 		groups : ["text"],
 		x : textPosLine(a.h1x, a.h1y, a.h2x, a.h2y)[0],
 		y : textPosLine(a.h1x, a.h1y, a.h2x, a.h2y)[1],
 		fontSize : '11pt',
-		text : (distance(a.h2x-a.h1x, a.h2y-a.h1y)/(a.scalar)).toFixed(2).toString(),
+		text : (distance(a.h2x - a.h1x, a.h2y - a.h1y) / (scalar)).toFixed(2).toString(),
 	});
 	// h1 to h3
 	$("#triangle").drawText({
 		fillStyle : "black",
 		strokeStyle : "black",
 		layer : true,
-		name: "B",
+		name : "B",
 		strokeWidth : 1,
 		groups : ["text"],
 		x : textPosLine(a.h1x, a.h1y, a.h3x, a.h3y)[0],
 		y : textPosLine(a.h1x, a.h1y, a.h3x, a.h3y)[1],
 		fontSize : '11pt',
-		text : (distance(a.h3x-a.h1x, a.h3y-a.h1y)/(a.scalar)).toFixed(2).toString(),
-		});
-		
-		// h2 to h3
-		$("#triangle").drawText({
+		text : (distance(a.h3x - a.h1x, a.h3y - a.h1y) / (scalar)).toFixed(2).toString(),
+	});
+
+	// h2 to h3
+	$("#triangle").drawText({
 		fillStyle : "black",
 		strokeStyle : "black",
 		layer : true,
-		name: "C",
+		name : "C",
 		strokeWidth : 1,
 		groups : ["text"],
 		x : textPosLine(a.h3x, a.h3y, a.h2x, a.h2y)[0],
 		y : textPosLine(a.h3x, a.h3y, a.h2x, a.h2y)[1],
 		fontSize : '11pt',
-		text : (distance(a.h2x-a.h3x, a.h2y-a.h3y)/(a.scalar)).toFixed(2).toString(),
+		text : (distance(a.h2x - a.h3x, a.h2y - a.h3y) / (scalar)).toFixed(2).toString(),
 	});
-	
+
 	// Angle
+	console.log(choice)
 	$("#triangle").drawText({
-		fillStyle: "black", 
-		strokeStyle: "black",
-		layer: true,
-		name: 'c',
-		strokeWidth: 1,
-		groups: ["text"],
-		x: a.h1x+20, y: a.h1y-20,
-		fontSize: '11pt',
-		text: a.choice === 'degrees' ? lawOfCosines(distance(a.h2x-a.h1x, a.h2y-a.h1y).toString(),distance(a.h3x-a.h1x, a.h3y-a.h1y).toString(), distance(a.h3x-a.h2x,a.h3y-a.h2y).toString(), '')[0].toFixed(2).toString()+"°" : parseRadians(parseInt(lawOfCosines(distance(a.h2x-a.h1x, a.h2y-a.h1y).toString(),distance(a.h3x-a.h1x, a.h3y-a.h1y).toString(),distance(a.h3x-a.h2x,a.h3y-a.h2y).toString(), '')[0], 10), 'out').toString(),
+		fillStyle : "black",
+		strokeStyle : "black",
+		layer : true,
+		name : 'c',
+		strokeWidth : 1,
+		groups : ["text"],
+		x : a.h1x + 20,
+		y : a.h1y - 20,
+		fontSize : '11pt',
+		text : choice === 'degrees' ? lawOfCosines(distance(a.h2x - a.h1x, a.h2y - a.h1y).toString(), distance(a.h3x - a.h1x, a.h3y - a.h1y).toString(), distance(a.h3x - a.h2x, a.h3y - a.h2y).toString(), '')[0].toFixed(2).toString() + "°" : parseRadians(parseInt(lawOfCosines(distance(a.h2x - a.h1x, a.h2y - a.h1y).toString(), distance(a.h3x - a.h1x, a.h3y - a.h1y).toString(), distance(a.h3x - a.h2x, a.h3y - a.h2y).toString(), '')[0], 10), 'out').toString(),
 	});
 }
 function lawOfCosines(A, B, C, c) {
@@ -227,12 +232,11 @@ function lawOfCosines(A, B, C, c) {
 		return [Math.round(100 * (Math.acos((Math.pow(C, 2) - ((Math.pow(A, 2) + Math.pow(B, 2)))) / (-2 * A * B))) * (180 / Math.PI)) / 100, quest];
 	}
 }
-function drawTriangle(A, B, C, c, choice) {
+function drawTriangle(A, B, C, c) {
 	// Pretty pictures!
 	// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Drawing_shapes
 	var canvas = document.getElementById('triangle');
 	var context = canvas.getContext("2d");
-	var scalar = 1;
 	$("#triangle").removeLayers();
 	$("#triangle").drawLayers();
 	if (!(A && B && C && c)) {
@@ -257,13 +261,13 @@ function drawTriangle(A, B, C, c, choice) {
 		A *= 1.1;
 		B *= 1.1;
 		C *= 1.1;
-		scalar*=1.1;
+		scalar *= 1.1;
 	}
 	while (!(A < 500 && B < 500 && C < 500)) {
 		A *= 0.9;
 		B *= 0.9;
 		C *= 0.9;
-		scalar*=.9;
+		scalar *= .9;
 	}
 	// Make sure to account for positive cosines. EDIT: Done
 	// So, I'm trying to get it to label the lines with their length. The theory is that you get the middle of the line, that's the first part, before "/2"
@@ -335,13 +339,12 @@ function drawTriangle(A, B, C, c, choice) {
 		drag : function () {
 			moved = true;
 			redrawText({
-				scalar: scalar,
-				h1x: $("#triangle").getLayer("h1").x,
-				h1y: $("#triangle").getLayer("h1").y,
-				h2x: $("#triangle").getLayer("h2").x,
-				h2y: $("#triangle").getLayer("h2").y,
-				h3x: $("#triangle").getLayer("h3").x,
-				h3y: $("#triangle").getLayer("h3").y,
+				h1x : $("#triangle").getLayer("h1").x,
+				h1y : $("#triangle").getLayer("h1").y,
+				h2x : $("#triangle").getLayer("h2").x,
+				h2y : $("#triangle").getLayer("h2").y,
+				h3x : $("#triangle").getLayer("h3").x,
+				h3y : $("#triangle").getLayer("h3").y,
 			});
 			$("#triangle").drawLine({
 				strokeStyle : "black",
@@ -413,13 +416,12 @@ function drawTriangle(A, B, C, c, choice) {
 		drag : function () {
 			moved = true;
 			redrawText({
-				scalar: scalar,
-				h1x: $("#triangle").getLayer("h1").x,
-				h1y: $("#triangle").getLayer("h1").y,
-				h2x: $("#triangle").getLayer("h2").x,
-				h2y: $("#triangle").getLayer("h2").y,
-				h3x: $("#triangle").getLayer("h3").x,
-				h3y: $("#triangle").getLayer("h3").y,
+				h1x : $("#triangle").getLayer("h1").x,
+				h1y : $("#triangle").getLayer("h1").y,
+				h2x : $("#triangle").getLayer("h2").x,
+				h2y : $("#triangle").getLayer("h2").y,
+				h3x : $("#triangle").getLayer("h3").x,
+				h3y : $("#triangle").getLayer("h3").y,
 			});
 			$("#triangle").drawLine({
 				strokeStyle : "black",
@@ -491,14 +493,12 @@ function drawTriangle(A, B, C, c, choice) {
 		drag : function () {
 			moved = true;
 			redrawText({
-				scalar: scalar,
-				h1x: $("#triangle").getLayer("h1").x,
-				h1y: $("#triangle").getLayer("h1").y,
-				h2x: $("#triangle").getLayer("h2").x,
-				h2y: $("#triangle").getLayer("h2").y,
-				h3x: $("#triangle").getLayer("h3").x,
-				h3y: $("#triangle").getLayer("h3").y,
-				choice: choice
+				h1x : $("#triangle").getLayer("h1").x,
+				h1y : $("#triangle").getLayer("h1").y,
+				h2x : $("#triangle").getLayer("h2").x,
+				h2y : $("#triangle").getLayer("h2").y,
+				h3x : $("#triangle").getLayer("h3").x,
+				h3y : $("#triangle").getLayer("h3").y,
 			});
 			$("#triangle").drawLine({
 				strokeStyle : "black",
@@ -557,19 +557,19 @@ function drawTriangle(A, B, C, c, choice) {
 		text : origC.toString(),
 	});
 	$("#triangle").drawText({
-		fillStyle: "black", 
-		strokeStyle: "black",
-		layer: true,
-		strokeWidth: 1,
-		groups: ["text"],
-		x: xOffset+20, y: yOffset-20,
-		fontSize: '11pt',
-		text: printc
+		fillStyle : "black",
+		strokeStyle : "black",
+		layer : true,
+		strokeWidth : 1,
+		groups : ["text"],
+		x : xOffset + 20,
+		y : yOffset - 20,
+		fontSize : '11pt',
+		text : printc
 	});
 }
 $(document).ready(function () {
 	// Which radio button you've chosen. Defaults to degrees.
-	var choice = 'degrees';
 	// This is used by two functions, so I declare it out here. It is where the cursor is in the box, when we need it.
 	var spot = 0;
 	var submit = $("#submit");
@@ -638,18 +638,33 @@ $(document).ready(function () {
 			if ($("#smallc").val() !== '') {
 				$('#smallc').val(Math.round(100 * parseRadians($('#smallc').val(), 'in')) / 100);
 			}
+			redrawText({
+				h1x : $("#triangle").getLayer("h1").x,
+				h1y : $("#triangle").getLayer("h1").y,
+				h2x : $("#triangle").getLayer("h2").x,
+				h2y : $("#triangle").getLayer("h2").y,
+				h3x : $("#triangle").getLayer("h3").x,
+				h3y : $("#triangle").getLayer("h3").y,
+			});
 		}
 		choice = 'degrees';
-		drawTriangle($("#A").val(), $("#B").val(), $("#C").val(), $("#smallc").val(), choice);
+		drawTriangle($("#A").val(), $("#B").val(), $("#C").val(), $("#smallc").val());
 	});
-	$("#radians").click(function () {
+		$("#radians").click(function () {
 		$("#pi").css("visibility", "visible");
-		drawTriangle($("#A").val(), $("#B").val(), $("#C").val(), $("#smallc").val(), choice);
 		//Same as above.
 		if (choice === 'degrees') {
 			if ($("#smallc").val() !== '') {
 				$('#smallc').val(parseRadians($('#smallc').val(), 'out'));
 			}
+			redrawText({
+				h1x : $("#triangle").getLayer("h1").x,
+				h1y : $("#triangle").getLayer("h1").y,
+				h2x : $("#triangle").getLayer("h2").x,
+				h2y : $("#triangle").getLayer("h2").y,
+				h3x : $("#triangle").getLayer("h3").x,
+				h3y : $("#triangle").getLayer("h3").y,
+			});
 		}
 		choice = 'radians';
 	});
